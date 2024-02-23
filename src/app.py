@@ -18,23 +18,6 @@ def main():
 
 @app.route("/echo_user_input", methods=["POST"])
 def echo_input():
-    dogs_records = Dogs.query.all()
+    input_text = request.form.get("user_input", "")
+    return "You entered: " + input_text
 
-    # Print each 'dogs' category value
-    for record in dogs_records:
-        print(record.dogs)
-
-    # Optionally return a message indicating completion
-    return "Dogs printed successfully."
-
-# @app.route('/print_dogs')
-# def print_dogs():
-#     # Query the database to get all 'dogs' records
-#     dogs_records = Dogs.query.all()
-#
-#     # Print each 'dogs' category value
-#     for record in dogs_records:
-#         print(record.dogs)
-#
-#     # Optionally return a message indicating completion
-#     return "Dogs printed successfully."
