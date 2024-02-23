@@ -48,7 +48,7 @@ def main():
 def echo_input():
     input_text = request.form.get("user_input", "")
     current_number_chihuahuas = get_chihuahua()
-    return "Yo entered: " + input_text + "<br>Current number of Chihuahuas: " + str(current_number_chihuahuas)
+    return "You entered: " + input_text + "<br>Current number of Chihuahuas: " + str(current_number_chihuahuas)
 
 if __name__ == "__main__":
     with app.app_context():
