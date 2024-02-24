@@ -1,28 +1,12 @@
 #!/usr/bin/env python3
 import requests
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from models import Dogs
+from extensions import db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Dogs.sqlite3'
-
-'''
-Define the database model
-that is used to store 
-the temperature.
-'''
-
-db = SQLAlchemy(app)
-
-
-class Dogs(db.Model):
-    datetime = db.Column(db.DateTime, primary_key=True, default=datetime.utcnow())
-    dogs = db.Column(db.Integer, nullable=False, default=0)
-'''
-Helper function to get temperature
-using API
-'''
+db.init_app(app)
 
 def get_api_token():
     url = "https://api.petfinder.com/v2/oauth2/token"
