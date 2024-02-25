@@ -15,7 +15,8 @@ import base64
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Dogs.sqlite3'
 db.init_app(app)
-
+with app.app_context():
+    db.create_all()
 
 @app.route("/")
 def main():
