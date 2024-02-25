@@ -1,8 +1,12 @@
 from flask import Flask, request
+from sqlalchemy import func
+
 from extensions import db
 from src.Data_Collection import Dogs
 from datetime import datetime, timedelta
-from sqlalchemy import or_
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Dogs.sqlite3'
@@ -12,32 +16,67 @@ db.init_app(app)
 @app.route("/")
 def main():
     return '''
-     <form action="/dogs" method="GET">
-        <p>Enter a date (YYYY-MM-DD)</p>
-         <input name="date" type="date">
-         <input type="submit" value="Submit!">
-     </form>
-     '''
+    <h1>Welcome to our Dog Adoption Data Center!</h1>
+    <p>Our site displays the number of dogs available for adoption at rescue centers throughout America. You can explore the number of dogs available on different dates to understand how it varies over time.</p>
+    <h2>Explore Dog Adoption Data</h2>
+    <form action="/dogs" method="GET">
+        <p>Enter start date</p>
+        <input name="start_date" type="date" required>
+        <p>Enter end date</p>
+        <input name="end_date" type="date" required>
+        <br><br>
+        <input type="submit" value="Submit!">
+    </form>
+    '''
+
 
 @app.route("/dogs", methods=["GET"])
 def display_dogs():
-    date_str = request.args.get('date')
-    if date_str:
+    start_date_str = request.args.get('start_date')
+    end_date_str = request.args.get('end_date')
+
+    if start_date_str and end_date_str:
         try:
-            date_for = datetime.strptime(date_str, "%Y-%m-%d").date()
-            start_datetime = datetime.combine(date_for, datetime.min.time())
-            end_datetime = datetime.combine(date_for, datetime.max.time())
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            if start_date > end_date:
+                return "Start date cannot be after end date."
         except ValueError:
             return "Invalid date format. Please use YYYY-MM-DD."
-        dogs_data = db.session.query(Dogs).filter(or_(
-            Dogs.datetime.between(start_datetime, end_datetime),
-        )).all()
-        dogs_list = [dog.dogs for dog in dogs_data]
-        return dogs_list
+
+        # Filter data between start_date and end_date
+        dogs_data = db.session.query(Dogs.datetime, func.sum(Dogs.dogs)).filter(
+            Dogs.datetime.between(start_date, end_date)).group_by(Dogs.datetime).all()
+
+        # Unzip the tuples into separate lists for dates and dog counts
+        dates, dogs_count = zip(*dogs_data)
+
+        # Plot the graph
+        plot_url = plot_graph(dates, dogs_count)
+
+        return f"<img src='{plot_url}'/>"
     else:
-        dogs_data = db.session.query(Dogs).all()
-        dogs_list = [dog.dogs for dog in dogs_data]
-        return dogs_list
+        return "Please provide both start date and end date."
+
+
+def plot_graph(dates, dogs_count):
+    plt.figure(figsize=(10, 10))
+    plt.plot(dates, dogs_count, marker='o', linestyle='-')  # Use plot instead of scatter
+    plt.xlabel('Date')
+    plt.ylabel('Number of Dogs Available for Adoption')
+    plt.title('Number of Dogs Over Time')
+    plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+    plt.grid(True)
+
+    # Convert plot to image
+    img = BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode()
+    plt.close()
+    return f"data:image/png;base64,{plot_url}"
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
