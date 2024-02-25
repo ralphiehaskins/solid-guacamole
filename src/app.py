@@ -3,7 +3,7 @@ from sqlalchemy import func
 
 from extensions import db
 from src.Data_Collection import Dogs
-from datetime import datetime, timedelta
+from datetime import datetime
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
