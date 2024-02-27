@@ -13,7 +13,7 @@ from io import BytesIO
 import base64
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Dogs.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gzycfjvofdiwxl:937fd4996cd4e607d53ee6c77496e8130be9a55921ae65a8983ca66ee8bcb529@ec2-52-54-200-216.compute-1.amazonaws.com:5432/d70l82e27csi55'
 db.init_app(app)
 with app.app_context():
     db.create_all()
