@@ -39,7 +39,7 @@ def get_chihuahua_listings_after(after_date_str):
 
 def get_chihuahua():
     today = datetime.now().date()
-    after_date = datetime(2024, 2, 10).date()
+    after_date = datetime(2018, 1, 1).date()
     prev_data = get_chihuahua_listings_after((after_date - timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z"))
 
     chihuahua_data = []
