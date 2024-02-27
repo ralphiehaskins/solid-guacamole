@@ -7,7 +7,7 @@ from models import Dogs
 from extensions import db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gzycfjvofdiwxl:937fd4996cd4e607d53ee6c77496e8130be9a55921ae65a8983ca66ee8bcb529@ec2-52-54-200-216.compute-1.amazonaws.com:5432/d70l82e27csi55'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mlqcvjnrtasrxj:3c63e4fcc60e28930ac97c0d11ea6513d22f4ec7a889178d02af32f73a113409@ec2-54-156-8-21.compute-1.amazonaws.com:5432/dbklucmcg8du3o'
 db.init_app(app)
 
 
@@ -15,8 +15,8 @@ def get_api_token():
     url = "https://api.petfinder.com/v2/oauth2/token"
     payload = {
         "grant_type": "client_credentials",
-        "client_id": "c2D59p9JQOk81YexYWy2tpHExfukvCKVNJTSaEIpXlfWg3c3Rd",
-        "client_secret": "RqsI5aqPW3Crd3uJdOUV6k1XAwuC3Hrsa7nH8XxG"
+        "client_id": "7GKYnvhDW5VouyRL78CEFg8usADmcdrIJBbQkPeP5azKnLAI2P",
+        "client_secret": "4MXdbVi6B2mq4URyIpZNTp7I2bvbwPaEUDJWblS9"
     }
     response = requests.post(url, data=payload)
     if response.status_code == 200:
@@ -39,7 +39,7 @@ def get_chihuahua_listings_after(after_date_str):
 
 def get_chihuahua():
     today = datetime.now().date()
-    after_date = datetime(2023, 2, 24).date()
+    after_date = datetime(2021, 12, 28).date()
     prev_data = get_chihuahua_listings_after((after_date - timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z"))
 
     chihuahua_data = []

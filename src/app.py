@@ -13,7 +13,7 @@ from io import BytesIO
 import base64
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gzycfjvofdiwxl:937fd4996cd4e607d53ee6c77496e8130be9a55921ae65a8983ca66ee8bcb529@ec2-52-54-200-216.compute-1.amazonaws.com:5432/d70l82e27csi55'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mlqcvjnrtasrxj:3c63e4fcc60e28930ac97c0d11ea6513d22f4ec7a889178d02af32f73a113409@ec2-54-156-8-21.compute-1.amazonaws.com:5432/dbklucmcg8du3o'
 db.init_app(app)
 with app.app_context():
     db.create_all()
@@ -25,7 +25,9 @@ def main():
     <p>Our site displays the number of dogs available for adoption at rescue centers throughout America. You can explore the number of dogs available on different dates to understand how it varies over time.</p>
     <h2>Explore Dog Adoption Data</h2>
     <form action="/dogs" method="GET">
-        <p>Enter start date</p>
+        <p style="font-size: 16px; color: #333; font-family: Arial, sans-serif;">
+            Enter start date <span style="color: red;">*no earlier than 2022</span>
+        </p>
         <input name="start_date" type="date" required>
         <p>Enter end date</p>
         <input name="end_date" type="date" required>
@@ -65,8 +67,11 @@ def display_dogs():
 
 
 def plot_graph(dates, dogs_count):
+    # Sort the dates and corresponding dog counts
+    dates_sorted, dogs_count_sorted = zip(*sorted(zip(dates, dogs_count)))
+
     plt.figure(figsize=(10, 10))
-    plt.plot(dates, dogs_count, marker='o', linestyle='-')  # Use plot instead of scatter
+    plt.plot(dates_sorted, dogs_count_sorted, marker='o', linestyle='-')  # Use plot instead of scatter
     plt.xlabel('Date')
     plt.ylabel('Number of Dogs Available for Adoption')
     plt.title('Number of Dogs Over Time')
@@ -81,7 +86,6 @@ def plot_graph(dates, dogs_count):
     plt.close()
     return f"data:image/png;base64,{plot_url}"
 
-
-
 if __name__ == "__main__":
     app.run(debug=True)
+
