@@ -15,8 +15,8 @@ def get_api_token():
     url = "https://api.petfinder.com/v2/oauth2/token"
     payload = {
         "grant_type": "client_credentials",
-        "client_id": "sYLEidGfuRLLXBSjE2LnM9Gq8fVbGJVDHpgQ1NyXiGgoHva3DE",
-        "client_secret": "yR1KCcztClukDcKHorxbj7PuhCoicLV93mER0PmC"
+        "client_id": "c2D59p9JQOk81YexYWy2tpHExfukvCKVNJTSaEIpXlfWg3c3Rd",
+        "client_secret": "RqsI5aqPW3Crd3uJdOUV6k1XAwuC3Hrsa7nH8XxG"
     }
     response = requests.post(url, data=payload)
     if response.status_code == 200:
@@ -39,7 +39,7 @@ def get_chihuahua_listings_after(after_date_str):
 
 def get_chihuahua():
     today = datetime.now().date()
-    after_date = datetime(2018, 1, 1).date()
+    after_date = datetime(2023, 2, 24).date()
     prev_data = get_chihuahua_listings_after((after_date - timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z"))
 
     chihuahua_data = []
@@ -61,7 +61,12 @@ if __name__ == "__main__":
         db.create_all()
         chihuahua_data = get_chihuahua()
         for after_date, data_difference in chihuahua_data:
-            new_entry = Dogs(datetime=after_date, dogs=data_difference)
-            db.session.add(new_entry)
-        db.session.commit()
+            existing_entry = Dogs.query.filter_by(datetime=after_date).first()
+            if existing_entry:
+                existing_entry.dogs = data_difference  # Update existing entry
+            else:
+                new_entry = Dogs(datetime=after_date, dogs=data_difference)
+                db.session.add(new_entry)  # Insert new entry
+            db.session.commit()  # Commit each entry individually
+
 
