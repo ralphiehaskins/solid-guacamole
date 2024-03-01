@@ -73,8 +73,8 @@ def plot_graph(dates, dogs_count):
     plt.figure(figsize=(10, 10))
     plt.plot(dates_sorted, dogs_count_sorted, marker='o', linestyle='-')  # Use plot instead of scatter
     plt.xlabel('Date')
-    plt.ylabel('Number of Dogs Available for Adoption')
-    plt.title('Number of Dogs Over Time')
+    plt.ylabel("Net # of Dogs Put Up for Adoption in US")
+    plt.title("Net Adoption Trends Over Time for Dogs in the US")
     plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
     plt.grid(True)
 
