@@ -1,4 +1,4 @@
 web: gunicorn src.app:app
-worker: python consumer_dog_data.py
+worker: python src/consumer_dog_data.py
 
 
