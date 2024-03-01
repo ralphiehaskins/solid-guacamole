@@ -1,4 +1,4 @@
 web: gunicorn src.app:app
-worker: python todays_date.py
+worker: python consumer_dog_data.py
 
 
