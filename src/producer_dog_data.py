@@ -35,7 +35,7 @@ def get_after_date_string():
     return yesterday.strftime("%Y-%m-%dT00:00:00Z")
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.URLParameters('amqps://msiknnac:tzytvfAu-zDK6KAWmC_hh0ExlRkLsmYH@toad.rmq.cloudamqp.com/msiknnac'))
     channel = connection.channel()
 
     channel.queue_declare(queue='chihuahua_data')
