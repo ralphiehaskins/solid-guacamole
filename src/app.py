@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from sqlalchemy import func
 
 from extensions import db
@@ -85,6 +85,10 @@ def plot_graph(dates, dogs_count):
     plot_url = base64.b64encode(img.getvalue()).decode()
     plt.close()
     return f"data:image/png;base64,{plot_url}"
+
+@app.route("/health")
+def health_check():
+    return jsonify(status="healthy")
 
 if __name__ == "__main__":
     app.run(debug=True)
